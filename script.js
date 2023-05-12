@@ -1,50 +1,67 @@
-// try program this solely in the console
-// then apply what i know about DOM manipulation
-
 // computer select number between 1 - 100
-// if 1 and 100 aren't inclusive 
-  // number = Math.floor(Math.random()*98 + 2);
-// if 1 and 100 are inclusive
 const number = Math.floor(Math.random()*100 + 1);
+console.log(number)
 
-// if global variable, start turn count at 0, local variable, start turn count at 1
-let turnCount = 0;
+let turnCount = 1;
+let button = document.querySelector('button');
+let input = document.querySelector('input');
 
-// every time player clicks button to submit guess: 
-  document.querySelector('button').addEventListener('click', () => {
-        // store user input
+   button.addEventListener('click', () => {
         let guess = document.querySelector('input').value;
-        turnCount++; // turnCount = 1
-        //console.log(turnCount);
+    
+        document.getElementById('turn-count').innerHTML = "Turn count: " + turnCount;
 
         // display number in a record
         if (turnCount === 1) {
-            // if turn count is equal to 1, intiate a list of guesses 'Previous guesses', append to doc
           document.getElementById('record').innerHTML = "Previous guesses: " + guess;
         } else {
-            // turnCount after 1, append guesses to record paragraph
-            document.getElementById('record').append(' ' + guess);
+          document.getElementById('record').append(' ' + guess);
         }
-  });
+    
+        // case: if user clicks button without inputting a number, default guess to 0
+        if (guess === '') {
+          guess = 0; // assign guess to 0 and compare against computer number
+          document.getElementById('record').append('0');
+        }
 
-// case: if user clicks button without inputting a number, default guess to 0
+        compareGuess(guess, number);
+    
+        turnCount++; 
+  }); 
 
   // compare guess to selected number
+function compareGuess(guess, number) {
+    let rightWrongMsg = document.getElementById('right-or-wrong');
+    let highLowMsg = document.getElementById('high-or-low');
+      console.log(guess, number);
+       // if guess is correct
+     if (Number(guess) === number) {
+        rightWrongMsg.innerHTML = 'Congratulations! You got it right!';
+       highLowMsg.remove();
+       terminate();
+     } else {
+       // display "Wrong!"
+        rightWrongMsg.innerHTML = 'Wrong!';
+       // report whether number is 'too low' or 'too high'
+            guess > number  
+            ? highLowMsg.innerHTML = 'last guess was too high'
+            : highLowMsg.innerHTML = 'last guess was too low'
+     }
+  
+     if (turnCount >= 10) {
+       rightWrongMsg.innerHTML = '!!!GAME OVER!!!';
+       highLowMsg.remove();
+       terminate();
+     }
+}  
 
-     // if guess is incorrect, display "Wrong!"
-        // report whether number is 'too low' or 'too high'
-            //guess > number 
-            //? // report 'last guess was too high'
-            //: // report 'last guess was too low'
-     // if guess is correct and turns <= 10
-        // message: Congratulations! You got it right!
-        // terminate game 
-    // if game count = 10 and no guess has been correct
-        // message: !!!GAME OVER!!!
-        // terminate game
-
-  // after each guess, increment turnCount by 1
-
-  // terminate game
-    // prevent more guesses from being submitted - deactivate button and input field
+// terminate game
+function terminate() {
+    // add disable attribute to button and input field
+    button.setAttribute('disabled', '');
+    input.setAttribute('disabled', '');
     // provide a button to restart game
+    let newGameButton = document.createElement('button');
+    newGameButton.innerHTML = 'Start new game';
+    document.querySelector('div').append(newGameButton);
+}

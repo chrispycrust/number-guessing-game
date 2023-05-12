@@ -1,11 +1,17 @@
-const number = Math.floor(Math.random()*100 + 1);
-
+let number = '';
 let turnCount = 1;
-let button = document.querySelector('button');
+let button = document.getElementById('submit');
 let input = document.querySelector('input');
+game();
 
+// how to get computer to choose a number number every time 
 
-button.addEventListener('click', () => {
+function game() {
+    // get computer to choose a number
+    number = getNumber();
+  console.log(number);
+    // get player to guess number
+    button.addEventListener('click', () => {
         let guess = document.querySelector('input').value;
     
         document.getElementById('turn-count').innerHTML = "Turn count: " + turnCount;
@@ -25,7 +31,11 @@ button.addEventListener('click', () => {
     
         turnCount++; 
   }); 
+}
 
+function getNumber() {
+  return Math.floor(Math.random()*100 + 1);
+}
 
 function compareGuess(guess, number) {
     let rightWrongMsg = document.getElementById('right-or-wrong');
@@ -50,7 +60,7 @@ function compareGuess(guess, number) {
 }  
 
 function terminate() {
-    button.setAttribute('disabled', '');
+    document.getElementById('submit').setAttribute('disabled', '');
     input.setAttribute('disabled', '');
     newGame();
 }
@@ -65,10 +75,17 @@ function newGame() {
     newGameButton.remove();
     button.removeAttribute('disabled');
     input.removeAttribute('disabled');
-    turnCount = 1;
+    
     document.getElementById('turn-count').innerHTML = '';
     document.getElementById('record').innerHTML = '';
     document.getElementById('right-or-wrong').innerHTML = '';
-    document.getElementById('high-or-low').innerHTML = '';
+    
+    // recreate high low paragraph message
+    let highLowMsg = document.createElement('p');
+    highLowMsg.setAttribute('id', 'high-or-low');
+    highLowMsg.innerHTML = '';
+    document.querySelector('div').append(highLowMsg);
+
+    turnCount = 1;
   });
 }

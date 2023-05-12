@@ -4,11 +4,9 @@ let button = document.getElementById('submit');
 let input = document.querySelector('input');
 game();
 
-// how to get computer to choose a number number every time 
-
 function game() {
     number = getNumber();
-    console.log(number);
+
     button.addEventListener('click', () => {
         let guess = document.querySelector('input').value;
     
@@ -41,10 +39,12 @@ function compareGuess(guess, number) {
 
     if (Number(guess) === number) {
         rightWrongMsg.innerHTML = 'Congratulations! You got it right!';
+        rightWrongMsg.setAttribute('class', 'win');
         highLowMsg.remove();
         terminate();
      } else {
         rightWrongMsg.innerHTML = 'Wrong!';
+        rightWrongMsg.setAttribute('class', 'fail');
         guess > number  
             ? highLowMsg.innerHTML = 'last guess was too high'
             : highLowMsg.innerHTML = 'last guess was too low'
@@ -52,6 +52,8 @@ function compareGuess(guess, number) {
   
      if (turnCount === 10) {
        rightWrongMsg.innerHTML = '!!!GAME OVER!!!';
+       rightWrongMsg.setAttribute('class', 'fail');
+       console.log(rightWrongMsg);
        highLowMsg.remove();
        terminate();
      }
@@ -60,10 +62,10 @@ function compareGuess(guess, number) {
 function terminate() {
     document.getElementById('submit').setAttribute('disabled', '');
     input.setAttribute('disabled', '');
-    newGame();
+    reset();
 }
 
-function newGame() {
+function reset() {
   let newGameButton = document.createElement('button');
   newGameButton.setAttribute('id', 'new-game');
   newGameButton.innerHTML = 'Start new game';
@@ -71,14 +73,17 @@ function newGame() {
   
   document.getElementById('new-game').addEventListener('click', () => {
     newGameButton.remove();
+    document.getElementById('right-or-wrong').classList.remove('fail', 'win');
     button.removeAttribute('disabled');
     input.removeAttribute('disabled');
+    document.getElementById('turn-count').innerHTML
+    = document.getElementById('record').innerHTML
+    = document.getElementById('right-or-wrong').innerHTML
+    = input.value
+    = '';
+
+    input.focus();
     
-    document.getElementById('turn-count').innerHTML = '';
-    document.getElementById('record').innerHTML = '';
-    document.getElementById('right-or-wrong').innerHTML = '';
-    
-    // recreate high low paragraph message
     let highLowMsg = document.createElement('p');
     highLowMsg.setAttribute('id', 'high-or-low');
     highLowMsg.innerHTML = '';
@@ -86,6 +91,5 @@ function newGame() {
 
     turnCount = 1;
     number = getNumber();
-    console.log(number);
   });
 }

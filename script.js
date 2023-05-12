@@ -7,10 +7,8 @@ game();
 // how to get computer to choose a number number every time 
 
 function game() {
-    // get computer to choose a number
     number = getNumber();
-  console.log(number);
-    // get player to guess number
+    console.log(number);
     button.addEventListener('click', () => {
         let guess = document.querySelector('input').value;
     
@@ -87,5 +85,7 @@ function newGame() {
     document.querySelector('div').append(highLowMsg);
 
     turnCount = 1;
+    number = getNumber();
+    console.log(number);
   });
 }

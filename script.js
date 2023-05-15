@@ -1,32 +1,40 @@
-let number = '';
+let number = getNumber();
+// document.getElementById('number').innerHTML = number; // for testing
 let turnCount = 1;
 let button = document.getElementById('submit');
 let input = document.querySelector('input');
-game();
 
-function game() {
-    number = getNumber();
+// ways to submit guesses
+  // player hits submit guess button
+  button.addEventListener('click', submitGuess); 
+  // if user hits 'enter' on keyboard to submit current value in input field
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      submitGuess();
+    }
+  });
 
-    button.addEventListener('click', () => {
-        let guess = document.querySelector('input').value;
+function submitGuess() {
+  let guess = document.querySelector('input').value;
     
-        document.getElementById('turn-count').innerHTML = "Turn count: " + turnCount;
+  document.getElementById('turn-count').innerHTML = "Turn count: " + turnCount;
 
-        if (turnCount === 1) {
-          document.getElementById('record').innerHTML = "Previous guesses: " + guess;
-        } else {
-          document.getElementById('record').append(' ' + guess);
-        }
+  if (turnCount === 1) {
+    document.getElementById('record').innerHTML = "Previous guesses: " + guess;
+  } else {
+    document.getElementById('record').append(' ' + guess);
+  }
 
-        if (guess === '') {
-          guess = 0; 
-          document.getElementById('record').append('0');
-        }
+  if (guess === '') {
+    guess = 0; 
+    document.getElementById('record').append('0');
+  }
 
-        compareGuess(guess, number);
+  compareGuess(guess, number);
     
-        turnCount++; 
-  }); 
+  turnCount++; 
+  input.value = '';
+  input.focus();
 }
 
 function getNumber() {
@@ -53,16 +61,15 @@ function compareGuess(guess, number) {
      if (turnCount === 10) {
        rightWrongMsg.innerHTML = '!!!GAME OVER!!!';
        rightWrongMsg.setAttribute('class', 'fail');
-       console.log(rightWrongMsg);
        highLowMsg.remove();
        terminate();
      }
 }  
 
 function terminate() {
-    document.getElementById('submit').setAttribute('disabled', '');
-    input.setAttribute('disabled', '');
-    reset();
+  document.getElementById('submit').setAttribute('disabled', '');
+  input.setAttribute('disabled', '');
+  reset();
 }
 
 function reset() {
@@ -76,6 +83,7 @@ function reset() {
     document.getElementById('right-or-wrong').classList.remove('fail', 'win');
     button.removeAttribute('disabled');
     input.removeAttribute('disabled');
+
     document.getElementById('turn-count').innerHTML
     = document.getElementById('record').innerHTML
     = document.getElementById('right-or-wrong').innerHTML
@@ -91,5 +99,6 @@ function reset() {
 
     turnCount = 1;
     number = getNumber();
+    // document.getElementById('number').innerHTML = number;
   });
 }

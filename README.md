@@ -4,9 +4,11 @@ Wanted to have a crack at trying to code this from scratch first and then compar
 
 # Lessons
 
+First, technical writing isn't easy. Just me trying to document my thought process and errors through this README has been pretty challenging.
+
 Attempting this exercise was great for reviewing what I know about DOM manipulation and further practicing planning then implementing the logic for a simple program.
 
-Basically, **don't overlook the basic and simple stuff**. The bulk of my debugging efforts went into finally having this realisation: I tended to write the operator `=` when I really wanted to assess equivalence (`==` or `===`). 
+Basically, **don't overlook the basic and simple stuff**. The bulk of my debugging efforts went into finally having this realisation: I tended to write the assignment operator `=` when I really wanted to assess equivalence (`==` or `===`). 
 
 ## Example 1
 I had this:
@@ -83,9 +85,14 @@ A value taken from an input field is a string by default and because I used the 
     }
     ```
 
-Through writing this README, I realise that trying to document my thought process and errors is actually quite challenging... technical writing isn't easy.
-
 # Next steps
+
+⬜️ I initally had the event listener for the button in a function called game(). I specified the computer to generate a number in that function to accommodate when the page first loads, and to generate a number again for subsequent games. 
+It's clear the line to generate a new number is redundant, but it worked and I'm still not sure why? I'm not sure but I thought the game() function would automatically run after the reset button is clicked (can't track through Chrome Debugger atm, please see last dot point.)
+
+In my latest code doc, I got rid of the redundancy:
+  - when the `start new button` is clicked, a new number is generated and stored back into `number` variable
+  - the game picks up only when the user starts submitting guesses (i.e. clicking button directly, or pressing enter on keyboard when the input field is focussed)
 
 ⬜️ I'm still a little hazy on when to use parameters and when to break a function apart into smaller ones. Only one function in my code has parameters `compareGuess`, the others are all empty. I think I generally used functions more like collections of steps associated with one action. 
 

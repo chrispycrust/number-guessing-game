@@ -1,33 +1,31 @@
 let number = getNumber();
-// document.getElementById('number').innerHTML = number; // for testing
 let turnCount = 1;
+// document.getElementById('number').innerHTML = number; // test whether computer actually is generating a new number
 let button = document.getElementById('submit');
 let input = document.querySelector('input');
 
-// ways to submit guesses
-  // player hits submit guess button
-  button.addEventListener('click', submitGuess); 
-  // if user hits 'enter' on keyboard to submit current value in input field
-  input.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
+button.addEventListener('click', submitGuess); 
+input.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
       submitGuess();
-    }
-  });
+  }
+});
 
 function submitGuess() {
   let guess = document.querySelector('input').value;
+  let guessRecord = document.getElementById('record');
     
   document.getElementById('turn-count').innerHTML = "Turn count: " + turnCount;
 
   if (turnCount === 1) {
-    document.getElementById('record').innerHTML = "Previous guesses: " + guess;
+    guessRecord.innerHTML = "Previous guesses: " + guess;
   } else {
-    document.getElementById('record').append(' ' + guess);
+    guessRecord.append(' ' + guess);
   }
 
   if (guess === '') {
     guess = 0; 
-    document.getElementById('record').append('0');
+    guessRecord.append('0');
   }
 
   compareGuess(guess, number);
@@ -67,12 +65,13 @@ function compareGuess(guess, number) {
 }  
 
 function terminate() {
-  document.getElementById('submit').setAttribute('disabled', '');
+  button.setAttribute('disabled', '');
   input.setAttribute('disabled', '');
   reset();
 }
 
 function reset() {
+
   let newGameButton = document.createElement('button');
   newGameButton.setAttribute('id', 'new-game');
   newGameButton.innerHTML = 'Start new game';
@@ -80,25 +79,31 @@ function reset() {
   
   document.getElementById('new-game').addEventListener('click', () => {
     newGameButton.remove();
-    document.getElementById('right-or-wrong').classList.remove('fail', 'win');
-    button.removeAttribute('disabled');
-    input.removeAttribute('disabled');
-
-    document.getElementById('turn-count').innerHTML
-    = document.getElementById('record').innerHTML
-    = document.getElementById('right-or-wrong').innerHTML
-    = input.value
-    = '';
-
-    input.focus();
-    
-    let highLowMsg = document.createElement('p');
-    highLowMsg.setAttribute('id', 'high-or-low');
-    highLowMsg.innerHTML = '';
-    document.querySelector('div').append(highLowMsg);
-
+    removeProperties();
+    createHighLowMsg();
     turnCount = 1;
+    input.focus();
     number = getNumber();
-    // document.getElementById('number').innerHTML = number;
+    // document.getElementById('number').innerHTML = number; // test whether computer actually is generating a new number
   });
+}
+
+function removeProperties() {
+  let rightWrongMsg = document.getElementById('right-or-wrong');
+  rightWrongMsg.classList.remove('fail', 'win');
+  button.removeAttribute('disabled');
+  input.removeAttribute('disabled');
+
+  document.getElementById('turn-count').innerHTML
+  = document.getElementById('record').innerHTML
+  = rightWrongMsg.innerHTML
+  = input.value
+  = '';
+}
+
+function createHighLowMsg() {
+  let highLowMsg = document.createElement('p');
+  highLowMsg.setAttribute('id', 'high-or-low');
+  highLowMsg.innerHTML = '';
+  document.querySelector('div').append(highLowMsg);
 }

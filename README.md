@@ -1,7 +1,126 @@
 This is MDN's game from their beginner javascript tutorial: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash
 
-Wanted to have a crack at trying to code this from scratch first and then compare my solution to theirs.
+Wanted to have a crack at trying to code this from scratch first and then compare my solution to theirs. Extended functionality by offering an alternate way to to submit guesses quickly via keyboard instead of just clicking the submit guess button.
 
+# Comparing my code to MDN's 
+
+MDN's code: https://github.com/mdn/learning-area/blob/main/javascript/introduction-to-js-1/first-splash/number-guessing-game.html
+
+
+- I had to specify the below code to record any empty inputs in the field as '0'
+    ```
+    if (guess === '') {
+      guess = 0; 
+      guessRecord.append('0');
+    }
+    ```
+  MDN's code converted string value gained from the input field to a number `const userGuess = Number(guessField.value);` which automatically converts any empty strings submitted to '0'. Whether the html tag is `<input>` or `<button>` doesn't seem to matter. Although I'd like to look more into when to use `<button>` to submit something over `<input type='submit'>`
+- used `const` for variables that don't refer to a different value
+  e.g. `document.querySelector(".guesses");` will always point to the paragraph with class name `'guesses'` despite the inner content changing. <br>
+  I used `let` for everything because I assumed the content changing in the tags means it's changing - experiment and explore in an isolated environment later
+- stored all paragraph tags in a div so they could easily use a for loop to empty out the tags
+  ```
+  <div class="resultParas">
+    <p class="guesses"></p>
+    <p class="lastResult"></p>
+    <p class="lowOrHi"></p>
+  </div>
+  ```
+  ```
+  const resetParas = document.querySelectorAll(".resultParas p");
+  for (const resetPara of resetParas) {
+    resetPara.textContent = "";
+  }
+  ```
+  I didn't put the paragraph tags in a containing div, and just assigned each of the paragraph tags manually to an empty string in the js script: 
+  ```
+  document.getElementById('turn-count').innerHTML
+  = document.getElementById('record').innerHTML
+  = rightWrongMsg.innerHTML
+  = input.value
+  = '';
+  ```
+- Forgot about this cool and convenient operator `+=`: 
+  ```
+  guesses.textContent += `${userGuess} `;
+  ```
+  I used the append method:
+  ```
+  if (turnCount === 1) {
+    guessRecord.innerHTML = "Previous guesses: " + guess;
+  } else {
+    guessRecord.append(' ' + guess);
+  }
+  ```
+- Chained the conditionals when checking the player's guess against the computer's selected number
+  ```
+      if (userGuess === randomNumber) {
+        lastResult.textContent = "Congratulations! You got it right!";
+        lastResult.style.backgroundColor = "green";
+        lowOrHi.textContent = "";
+        setGameOver();
+      } else if (guessCount === 10) {
+        lastResult.textContent = "!!!GAME OVER!!!";
+        lowOrHi.textContent = "";
+        setGameOver();
+      } else {
+        lastResult.textContent = "Wrong!";
+        lastResult.style.backgroundColor = "red";
+        if (userGuess < randomNumber) {
+          lowOrHi.textContent = "Last guess was too low!";
+        } else if (userGuess > randomNumber) {
+          lowOrHi.textContent = "Last guess was too high!";
+        }
+      }
+    
+  ```
+- Interesting to see how their functions are divvied:
+  - their function `checkGuess()` also contains the code for comparing guesses whereas I separated into two functions - one that occurs when player submits guesses and another for comparing guesses. Although thinking about it now - when a player submits a guess this would also include checking their guess so it makes sense to put them together.
+  - their setGameOver() function is similar to my terminate() function but also includes the creation of the `start new game` button. when this new button is clicked, they've split reset into another function.
+  ```
+  function setGameOver() {
+    guessField.disabled = true;
+    guessSubmit.disabled = true;
+    
+    resetButton = document.createElement("button");
+    resetButton.textContent = "Start new game";
+    document.body.append(resetButton);
+    resetButton.addEventListener("click", resetGame);
+  }
+  ```
+   i lumped the creation of a new button in my reset function.
+   ```
+   function reset() {
+
+    let newGameButton = document.createElement('button');
+    newGameButton.setAttribute('id', 'new-game');
+    newGameButton.innerHTML = 'Start new game';
+    document.querySelector('div').append(newGameButton);
+    
+    document.getElementById('new-game').addEventListener('click', () => {
+      newGameButton.remove();
+      removeProperties();
+      createHighLowMsg();
+      turnCount = 1;
+      input.focus();
+      number = getNumber();
+      // document.getElementById('number').innerHTML = number; // test whether computer actually is generating a new number
+    });
+  }
+   ```
+- Made almost all their variables global and identified them at the start of the doc - even the resetButton which seems specific and necessary only for one function is declared simply as `let resetButton` at the start
+- They just changed background colour of the low hi message to white in reset function. I removed style classes completely then readded them later 
+- forgot to interrogate more deeply what other attributes are necessary for labels and inputs - maybe for accessibility
+  ```
+  <label for="guessField">Enter a guess: </label>
+  <input type="number" id="guessField" class="guessField" />
+  <input type="submit" value="Submit guess" class="guessSubmit" />
+  ```
+- grabbed selectors by classes using `document.querySelector()`... maybe me trying to get by class name didn't work (`document.getElementsByClassName()`) 
+  __returns an array-like object of all child elements which have all of the given class name(s).__ — via [Document: getElementsByClassName() method - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByClassName) [[+Roam]]
+- can type this `guessField.disabled = false;` instead of this `button.setAttribute('disabled', '');`
+- used `<input type="submit" value="Submit guess" class="guessSubmit" />` to allow player to submit a guess. I used a button
+ 
 # Lessons
 
 First, technical writing isn't easy. Just me trying to document my thought process and errors through this README has been pretty challenging.
